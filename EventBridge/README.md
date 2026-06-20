@@ -1,42 +1,100 @@
-Amazon EventBridge
+# Amazon EventBridge
 
-Create an Amazon EventBridge which Triggers the Lambda function on a EBS Volume Event, like createVolume, deleteVolume, etc..
+Amazon EventBridge is used to monitor EBS volume events and automatically trigger the Lambda function whenever a volume is created, modified, or deleted.
 
-1. In the AWS Management Console, Open Amazon EventBridge Service. Go to Rules section in the left menu.
-2. Click on Create Rule.
-3. Define Rule Details.
-    Name: EBS-Volume-Event-alert-rule
-    Description: This Rule triggers a Lambda Function on an EBS Volume Event.
-    Event Bus: Default
-4. Click Next. Provide Build event pattern. 
-    Under Events :
-       Event Source: AWS events or EventBridge partner events
-   Under Event pattern :
-       Event source: AWS Services
-       AWS service: EC2
-       Event type: EBS Volume Notification
-       Event Type Specification 1 : Specific Events
-           Specific Events: Select createVolume, modifyVolume, deleteVolume
-       Event Type Specification 2 : Any volume ARN
-       
-    The JSON looks like below:
-    {
-      "source": ["aws.ec2"],
-      "detail-type": ["EBS Volume Notification"],
-      "detail": {
-           "event": ["createVolume", "modifyVolume", "deleteVolume"]
-       }
-    }
+## Create an EventBridge Rule
 
-5. Click Next. Now Select target(s).
-     Under Target 1:
-         Target types: AWS Service
-         Select a target: Lambda Function
-         Target Location: Target in this account
-         Function: EBSVolumeNotifier
-         ExecutionRole: Create a new execution role for this specific resource.
-         Role Name: Leave it to default or give a custom Role Name.
-6. Click Next. Add Tags - Optional.
-7. Click Next. Review and Create.
-8. Click Create Rule.
-         
+1. Open the **Amazon EventBridge** service in the AWS Management Console.
+2. In the left menu, select **Rules**.
+3. Click **Create Rule**.
+
+---
+
+## Define Rule Details
+
+Configure the rule with the following values:
+
+- **Name:** `EBS-Volume-Event-alert-rule`
+- **Description:** Triggers the Lambda function whenever an EBS volume event occurs.
+- **Event Bus:** `default`
+
+4. Click **Next**.
+
+---
+
+## Build the Event Pattern
+
+### Events
+
+- **Event Source:** AWS events or EventBridge partner events
+
+### Event Pattern
+
+- **Event Source:** AWS Services
+- **AWS Service:** EC2
+- **Event Type:** EBS Volume Notification
+
+### Event Type Specification 1
+
+- **Specific Events**
+  - `createVolume`
+  - `modifyVolume`
+  - `deleteVolume`
+
+### Event Type Specification 2
+
+- **Any Volume ARN**
+
+The generated event pattern should look similar to:
+
+```json
+{
+  "source": ["aws.ec2"],
+  "detail-type": ["EBS Volume Notification"],
+  "detail": {
+    "event": [
+      "createVolume",
+      "modifyVolume",
+      "deleteVolume"
+    ]
+  }
+}
+```
+
+5. Click **Next**.
+
+---
+
+## Configure the Target
+
+Under **Target 1**, configure the following:
+
+- **Target Type:** AWS Service
+- **Select a Target:** Lambda Function
+- **Target Location:** Target in this account
+- **Function:** `EBSVolumeNotifier`
+- **Execution Role:** Create a new execution role for this specific resource
+- **Role Name:** Leave the default value or provide a custom name
+
+6. Click **Next**.
+
+---
+
+## Review and Create
+
+1. (Optional) Add tags if required.
+2. Click **Next**.
+3. Review the configuration.
+4. Click **Create Rule**.
+
+---
+
+## Result
+
+The EventBridge rule is now configured to automatically trigger the **`EBSVolumeNotifier`** Lambda function whenever any of the following EBS volume events occur:
+
+- `createVolume`
+- `modifyVolume`
+- `deleteVolume`
+
+The Lambda function will then log the event details to CloudWatch Logs and send email notifications through SNS.

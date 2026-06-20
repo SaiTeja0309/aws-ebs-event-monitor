@@ -1,6 +1,12 @@
 Lambda Function - AWS Lambda Service
 This Lambda function, when triggered by an Amazon EventBridge Rule, logs the relevant data needed into the CloudWatch Logs and also sends an Email to the Subscriber using Amazon Simple Notification Service (SNS).
 
+Create a Lambda Function with Name "EBSVolumeNotifier".
+Open the Lambda function and inside code block, copy the content of lambda_function.py file.
+Replace the TOPIC_ARN with SNS Topic ARN, after creating the SNS Topic.
+
+FOr Creating the SNS Topic, Refer README.md in SNS folder.
+
 After Creating SNS Topic and adding Subscription, follow the below steps.
 1. Open the Lambda Function "EBSVolumeNotifier".
 2. Under Configuration:

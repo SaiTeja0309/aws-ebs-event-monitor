@@ -1,36 +1,81 @@
-Lambda Function - AWS Lambda Service
-This Lambda function, when triggered by an Amazon EventBridge Rule, logs the relevant data needed into the CloudWatch Logs and also sends an Email to the Subscriber using Amazon Simple Notification Service (SNS).
+# Lambda Function - AWS Lambda Service
 
-Create a Lambda Function with Name "EBSVolumeNotifier".
-Open the Lambda function and inside code block, copy the content of lambda_function.py file.
-Replace the TOPIC_ARN with SNS Topic ARN, after creating the SNS Topic.
+This Lambda function is triggered by an Amazon EventBridge Rule. When triggered, it:
 
-FOr Creating the SNS Topic, Refer README.md in SNS folder.
+- Logs relevant event data to CloudWatch Logs.
+- Sends an email notification to subscribers using Amazon SNS.
 
-After Creating SNS Topic and adding Subscription, follow the below steps.
-1. Open the Lambda Function "EBSVolumeNotifier".
-2. Under Configuration:
-      Click on Permissions in the left menu.
-          Under Execution Role:
-              Open the Execution Role.
-                  Under Permissions Policies:
-                      Click Add Permissions: Create inline policy.
-                          Select a Service: 
-                              Service: SNS
-                              Actions Allowed: Filter out and Select "Publish".
-                              Resources: Specific
-                              Add ARNs: 
-                                  Provide the SNS Topic details like Region, Name, Resource ARN.
-                              Click Add ARN.
-                     Click Next.
-                 Provide Policy name: ebs-sns-topic-role
-                 Click Create Policy.
+## Create the Lambda Function
 
+1. Create a Lambda function named **`EBSVolumeNotifier`**.
+2. Open the function and replace the default code with the contents of **`lambda_function.py`**.
+3. After creating the SNS Topic, replace the value of **`TOPIC_ARN`** in the code with your SNS Topic ARN.
 
-   Now Let's test the Lambda Function.
-   Open EC2 Service. Click on Volumes under Elastic Block Store in the left menu.
-   Click on Create Volume.
-       Volume Size: 1G
-       Click Create Volume.
+> **Note:** Refer to the `README.md` file in the SNS folder for SNS Topic creation steps.
 
-   Now Check your email and also Open CLoud Watch Logs. You should see the event details.
+---
+
+## Configure Lambda Permissions
+
+After creating the SNS Topic and adding a subscription:
+
+1. Open the **`EBSVolumeNotifier`** Lambda function.
+2. Navigate to:
+
+   ```
+   Configuration
+   └── Permissions
+       └── Execution Role
+           └── Permissions Policies
+               └── Add Permissions
+                   └── Create Inline Policy
+   ```
+
+3. Configure the policy:
+
+   - **Service:** SNS
+   - **Actions Allowed:** Publish
+   - **Resources:** Specific
+
+4. Click **Add ARN** and provide:
+
+   - Region
+   - Topic Name
+   - SNS Topic ARN
+
+5. Click **Next**.
+6. Enter the policy name:
+
+   ```text
+   ebs-sns-topic-role
+   ```
+
+7. Click **Create Policy**.
+
+---
+
+## Test the Lambda Function
+
+1. Open the **EC2** service.
+2. In the left menu, go to:
+
+   ```
+   Elastic Block Store
+   └── Volumes
+   ```
+
+3. Click **Create Volume**.
+4. Set:
+
+   - **Volume Size:** `1 GiB`
+
+5. Click **Create Volume**.
+
+---
+
+## Verify the Results
+
+After the volume is created:
+
+- Check your email inbox for the SNS notification.
+- Open CloudWatch Logs and verify that the event details have been logged successfully.
